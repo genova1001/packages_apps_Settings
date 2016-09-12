@@ -117,6 +117,13 @@
                 android:key="battery_light"
                 android:title="@string/battery_light_title"
                 android:fragment="com.android.settings.notificationlight.BatteryLightSettings" />
+                
+        <!-- Notification Force Expand -->
+        <com.android.settings.preference.SystemSettingSwitchPreference
+                android:key="force_expanded_notifications"
+                android:title="@string/notification_force_expand_title"
+                android:summary="@string/notification_force_expand_summary"
+                android:defaultValue="false" /> 
 
          <!-- When device is locked -->
         <com.android.settings.DropDownPreference
