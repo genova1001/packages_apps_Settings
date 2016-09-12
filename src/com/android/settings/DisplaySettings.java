@@ -104,6 +104,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_WAKE_UP_CATEGORY = "category_wake_up_options";
     private static final String KEY_PROXIMITY_CHECK_ON_WAKE = "proximity_check_on_wake";
     private static final String KEY_WAKE_UP_WHEN_PLUGGED_UNPLUGGED = "wake_up_when_plugged_unplugged";
+    private static final String DASHBOARD_SWITCHES = "dashboard_switches";
 
     private static final int DLG_GLOBAL_CHANGE_WARNING = 1;
 
@@ -122,6 +123,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private ListPreference mScreenTimeoutPreference;
     private ListPreference mNightModePreference;
+    private ListPreference mDashboardSwitches;
     private Preference mScreenSaverPreference;
     private SwitchPreference mLiftToWakePreference;
     private SwitchPreference mDozePreference;
@@ -191,6 +193,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         mFontSizePref.setOnPreferenceChangeListener(this);
         mFontSizePref.setOnPreferenceClickListener(this);
 
+        mDashboardSwitches = (ListPreference) findPreference(DASHBOARD_SWITCHES);
+        mDashboardSwitches.setValue(String.valueOf(Settings.System.getInt(
+                getContentResolver(), Settings.System.DASHBOARD_SWITCHES, 0)));
+        mDashboardSwitches.setSummary(mDashboardSwitches.getEntry());
+        mDashboardSwitches.setOnPreferenceChangeListener(this);
+ 
         if (isAutomaticBrightnessAvailable(getResources())) {
             mAutoBrightnessPreference = (SwitchPreference) findPreference(KEY_AUTO_BRIGHTNESS);
             mAutoBrightnessPreference.setOnPreferenceChangeListener(this);
@@ -512,6 +520,14 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             mTapToWakePreference.setChecked(value != 0);
         }
 
+        if (preference == mDashboardSwitches) {
+            Settings.System.putInt(getContentResolver(), Settings.System.DASHBOARD_SWITCHES,
+                    Integer.valueOf((String) objValue));
+            mDashboardSwitches.setValue(String.valueOf(objValue));
+            mDashboardSwitches.setSummary(mDashboardSwitches.getEntry());
+            return true;
+         }
+         
         // Update camera gesture #1 if it is available.
         if (mCameraGesturePreference != null) {
             int value = Settings.Secure.getInt(getContentResolver(), CAMERA_GESTURE_DISABLED, 0);
